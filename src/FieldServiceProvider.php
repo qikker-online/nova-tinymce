@@ -1,11 +1,13 @@
 <?php
 
-namespace Emilianotisato\NovaTinyMCE;
+namespace QikkerOnline\NovaTinyMCE;
 
+use Illuminate\Support\Facades\Route;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
-use Emilianotisato\NovaTinyMCE\Console\SupportFileManagerCommand;
+use  QikkerOnline\NovaTinyMCE\Console\SupportFileManagerCommand;
+use QikkerOnline\NovaTinyMCE\Http\Middleware\Authorize;
 
 class FieldServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,10 @@ class FieldServiceProvider extends ServiceProvider
                 SupportFileManagerCommand::class
             ]);
         }
+
+        $this->app->booted(function() {
+            $this->routes();
+        });
     }
 
     /**
@@ -45,5 +51,22 @@ class FieldServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/nova-tinymce.php', 'nova-tinymce');
+    }
+
+    /**
+     * Register the tool's routes.
+     *
+     * @return void
+     */
+    protected function routes()
+    {
+        if ($this->app->routesAreCached()) {
+            return;
+        }
+
+        Route::middleware(['nova'])
+            ->prefix('nova-vendor/nova-tinymce')
+            ->namespace('QikkerOnline\\NovaTinyMCE\\Http\\Controllers')
+            ->group(__DIR__.'/../routes/api.php');
     }
 }

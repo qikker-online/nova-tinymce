@@ -1,6 +1,6 @@
 <?php
 
-namespace Emilianotisato\NovaTinyMCE\Console;
+namespace QikkerOnline\NovaTinyMCE\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;

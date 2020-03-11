@@ -1,9 +1,9 @@
 <?php
 
-namespace Emilianotisato\NovaTinyMCE;
+namespace QikkerOnline\NovaTinyMCE;
 
-use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\Expandable;
+use Laravel\Nova\Fields\Field;
 
 class NovaTinyMCE extends Field
 {
@@ -23,7 +23,10 @@ class NovaTinyMCE extends Field
         parent::__construct($name, $attribute, $resolveCallback);
 
         $this->withMeta([
-            'options' => config('nova-tinymce.default_options')
+            'options' => array_merge(
+                config('nova-tinymce.default_options'),
+                ['images_upload_url' => route('nova-tinymce.image-upload')],
+            ),
         ]);
     }
 
@@ -32,7 +35,8 @@ class NovaTinyMCE extends Field
      * Consult the TinyMCE documentation [https://github.com/tinymce/tinymce-vue]
      * to view the list of all the available options.
      *
-     * @param  array $options
+     * @param array $options
+     *
      * @return self
      */
     public function options(array $options)
@@ -40,7 +44,7 @@ class NovaTinyMCE extends Field
         $currentOptions = $this->meta['options'];
 
         return $this->withMeta([
-            'options' => array_merge($currentOptions, $options)
+            'options' => array_merge($currentOptions, $options),
         ]);
     }
 
@@ -52,7 +56,7 @@ class NovaTinyMCE extends Field
     public function id($id)
     {
         $this->withMeta([
-            'id' => $id
+            'id' => $id,
         ]);
 
         return $this;

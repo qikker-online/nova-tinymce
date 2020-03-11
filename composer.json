@@ -1,5 +1,5 @@
 {
-    "name": "emilianotisato/nova-tinymce",
+    "name": "qikker-online/nova-tinymce",
     "description": "This Nova package allow you to use TinyMCE editor for text areas.You can customize the editor options and... you can upload images to your server and put them rigth there on the text without leaving the text editor!",
     "keywords": [
         "laravel",
@@ -13,13 +13,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Emilianotisato\\NovaTinyMCE\\": "src/"
+            "QikkerOnline\\NovaTinyMCE\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Emilianotisato\\NovaTinyMCE\\FieldServiceProvider"
+                "QikkerOnline\\NovaTinyMCE\\FieldServiceProvider"
             ]
         }
     },
