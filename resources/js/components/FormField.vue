@@ -1,7 +1,8 @@
 <template>
     <default-field :field="field" :full-width-content="true">
         <template slot="field">
-            <editor :id="field.id || field.attribute"
+            <editor v-if="active"
+                    :id="field.id || field.attribute"
                     v-model="value"
                     :class="errorClasses"
                     :placeholder="field.name"
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import {FormField, HandlesValidationErrors} from 'laravel-nova'
     import Editor from '@tinymce/tinymce-vue'
 
@@ -24,7 +26,18 @@
 
         mixins: [FormField, HandlesValidationErrors],
 
-        props: ['resourceName', 'resourceId', 'field'],
+        props: [
+            'resourceName',
+            'resourceId',
+            'contentItemIndex',
+            'fieldIndex'
+        ],
+
+        data() {
+            return {
+                active: true
+            }
+        },
 
         computed: {
             options() {
@@ -37,6 +50,16 @@
                 }
 
                 return options
+            }
+        },
+        watch: {
+            // Rerender the component when the position changes, needed for iframes
+            // see: https://github.com/tinymce/tinymce-vue/issues/10#issuecomment-540996933
+            contentItemIndex: function (index) {
+                this.active = false
+                Vue.nextTick(() =>{
+                    this.active = true
+                })
             }
         },
 
@@ -58,6 +81,8 @@
             async imagesUploadHandler(blobInfo, success, failure) {
                 let formData = new FormData();
                 formData.append('file', blobInfo.blob(), blobInfo.filename());
+                formData.append('resourceId', this.resourceId)
+                formData.append('resourceName', this.resourceName)
 
                 let response;
 
@@ -75,7 +100,7 @@
                     failure('Error - ' + e)
                 }
 
-                if(!response.data.location) {
+                if (!response.data.location) {
                     failure('Error - response invalid: ' + response.data);
                 }
 
@@ -106,7 +131,6 @@
                     }
                 });
             }
-
         }
     }
 </script>
